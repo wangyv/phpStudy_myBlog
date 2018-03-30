@@ -9,7 +9,8 @@ include 'admin_check.php';
   <base href="<?php echo site_url()?>">
       <link rel="stylesheet" href="css/space2011.css" type="text/css" media="screen">
   <link rel="stylesheet" type="text/css" href="css/jquery.css" media="screen">
-    body,table,input,textarea,select {font-family:Verdana,sans-serif,宋体;}	
+	<style>
+	body,table,input,textarea,select {font-family:Verdana,sans-serif,宋体;}	
   </style>
 </head>
 <body>
@@ -24,13 +25,13 @@ include 'admin_check.php';
 <div id="OSC_Content">
 <div id="AdminScreen">
     <div id="AdminPath">
-        <a href="index_logined.htm">返回我的首页</a>&nbsp;»
+        <a href="admin/index">返回我的首页</a>&nbsp;»
     	<span id="AdminTitle">博客文章管理</span>
     </div>
     <?php include 'admin_menu.php'?>
     <div id="AdminContent">
 <div class="MainForm BlogArticleManage">
-  <h3 class="title">共有 3 篇博客，每页显示 40 个，共 1 页</h3>
+  <h3 class="title">共有 <?php echo count($blogs)?> 篇博客，每页显示 40 个，共 1 页</h3>
     <div id="BlogOpts">
 	<a href="javascript:;" onclick="select_all();">全选</a>&nbsp;|
 	<a href="javascript:;" onclick="unselect_all();">取消</a>&nbsp;|
@@ -38,21 +39,19 @@ include 'admin_check.php';
 	<a href="javascript:;" onclick="delete_sel()">删除选中</a>
   </div>
   <ul>
+		<?php
+			foreach($blogs as $blog){
+
+		?>
 		<li class="row_1">
 		<input name="blog" value="24027" type="checkbox">
-		<a href="viewPost_comment.htm" target="_blank">测试文章3</a>
-		<small>2011-06-18 00:34</small>
-	</li>
-		<li class="row_0">
-		<input name="blog" value="24026" type="checkbox">
-		<a href="viewPost_logined.htm" target="_blank">测试文章2</a>
-		<small>2011-06-17 23:06</small>
-	</li>
-		<li class="row_1">
-		<input name="blog" value="24025" type="checkbox">
-		<a href="viewPost.htm" target="_blank">测试文章1</a>
-		<small>2011-06-17 23:04</small>
-	</li>
+		<a href="viewPost_comment.htm" target="_blank"><?php echo $blog -> title?></a>
+		<small><?php echo $blog -> post_time?></small>
+		</li>
+		<?php
+
+		}
+		?>
 	  </ul>
     </div>
 </div>
