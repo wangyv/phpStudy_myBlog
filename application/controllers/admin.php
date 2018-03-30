@@ -29,19 +29,35 @@ class Admin extends CI_Controller {
         $this -> load -> model('blog_model');
         $row = $this -> blog_model -> save($blog_title, $blog_content, $blog_type_id);
         if($row){
-            $this -> load -> view('blog_management');
+            echo 'success';
         }else{
-            echo "<script>alert('添加博客失败！')</script>";
+            echo "fail";
         }
 
         
     }
     public function blog_manage()
     {
-        $this -> load -> view('blog_management');
-    }
-    public function select(){
+        $user = $this -> session -> userdata('user');
+        $user_id = $user -> user_id;
         $this -> load -> model('blog_model');
-        $result = $this -> blog_model -> find_by_blog_id('1');
+        $types = $this -> blog_model -> find_blog_type_by_user($user_id);
+        $arr = array();
+        $count = 0;
+        foreach($types as $type){
+            $type_id = $type -> type_id;
+            $blogs = $this -> blog_model -> find_blog_by_type_id($type_id);
+            if($blogs){
+                foreach($blogs as $blog){
+                    $arr[$count] = $blog;
+                    $count++;
+                }
+            }
+            
+        }
+        $this -> load -> view('blog_management',array(
+            'blogs' => $arr
+        ));
     }
+    
 }
