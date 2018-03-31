@@ -5,7 +5,7 @@ include 'admin_check.php';
 <html xml:lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN"><head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="Content-Language" content="zh-CN">
-  <title>博客文章管理 Johnny的博客 - 唯创个人博客</title>
+  <title>博客文章管理 <?php echo $user -> username?>的博客 - 唯创个人博客</title>
   <base href="<?php echo site_url()?>">
       <link rel="stylesheet" href="css/space2011.css" type="text/css" media="screen">
   <link rel="stylesheet" type="text/css" href="css/jquery.css" media="screen">
@@ -43,11 +43,11 @@ include 'admin_check.php';
 			foreach($blogs as $blog){
 
 		?>
-		<li class="row_1">
-		<input name="blog" value="24027" type="checkbox">
-		<a href="viewPost_comment.htm" target="_blank"><?php echo $blog -> title?></a>
-		<small><?php echo $blog -> post_time?></small>
-		</li>
+			<li class="row_1">
+			<input name="blog" value="24027" type="checkbox">
+			<a href="viewPost_comment.htm" target="_blank"><?php echo $blog -> title?></a>
+			<small><?php echo $blog -> post_time?></small>
+			</li>
 		<?php
 
 		}
