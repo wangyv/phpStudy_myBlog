@@ -14,7 +14,7 @@
 		当前访客身份：
                 <?php echo $user -> username?> [ <a href="welcome/index">退出</a> ]
 				<span id="OSC_Notification">
-			<a href="inbox.htm" class="msgbox" title="进入我的留言箱">你有<em>0</em>新留言</a>
+			<a href="admin/inbox" class="msgbox" title="进入我的留言箱">你有<em>0</em>新留言</a>
 																				</span>
         </div>
 		<div id="SearchBar">
