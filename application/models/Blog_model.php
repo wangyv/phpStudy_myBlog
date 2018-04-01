@@ -44,10 +44,11 @@ class Blog_model extends CI_Model {
         return $this -> db -> get() -> result();
     }
     public function find_blog_limit_by_type_id($user_id, $offset, $page_num){
-        $this -> db -> select('b.*');
+        $this -> db -> select('b.*,bt.type_name');
         $this -> db -> from('t_blog b');
         $this -> db -> join('t_blog_type bt',"bt.type_id=b.type_id");
         $this -> db -> where("bt.user_id", $user_id);
+        $this -> db -> order_by('b.post_time', 'DESC');
         $this -> db -> limit($page_num, $offset);
         return $this -> db -> get() -> result();
     }
@@ -80,5 +81,15 @@ class Blog_model extends CI_Model {
         ));
         return $this -> db -> affected_rows();
 
+    }
+    public function update_blog($title, $content, $type_id, $blog_id){
+        $this -> db -> where('b.blog_id', $blog_id);
+        $this -> db -> update('t_blog b', array(
+            'title' => $title,
+            'content' => $content,
+            'type_id' => $type_id
+        ));
+        
+        return $this -> db -> affected_rows();
     }
 }
