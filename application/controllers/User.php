@@ -26,8 +26,6 @@ class User extends CI_Controller {
         $gender = $this -> input -> post('gender');
 
         //2. 判断
-
-
         //3. 连接数据库
         $this -> load -> model('user_model');
         $user = $this -> user_model -> save($email, $pwd, $name, $gender);
@@ -45,6 +43,27 @@ class User extends CI_Controller {
             echo 'success';
         }else{
             echo 'fail';
+        }
+    }
+
+    public function check_old_pwd(){
+        $pwd = $this -> input -> post('old_pwd');
+        $new_pwd = $this -> input -> post('new_pwd');
+        $user = $this -> session -> userdata('user');
+        $user_pwd = $user -> password;
+        $email = $user -> email;
+        $this -> load -> model('user_model');
+        if($pwd == $user_pwd){
+            $row = $this -> user_model -> update_pwd_by_email($new_pwd, $email);
+            if($row){
+                $new_user = $this -> user_model -> find_by_email($email);
+                $this -> session -> set_userdata('user', $new_user);
+                echo 'success';
+            }else{
+                echo 'fail_change';
+            }
+        }else{
+            echo 'fail_oldpwd';
         }
     }
 }
