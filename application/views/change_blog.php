@@ -5,7 +5,7 @@
 <html xml:lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN"><head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="Content-Language" content="zh-CN">
-  <title>发表博客 <?php echo $user->username?>的博客 - 唯创个人博客</title>
+  <title>发表博客 Johnny的博客 - 唯创个人博客</title>
   <base href="<?php echo site_url()?>">
   <link rel="stylesheet" href="css/space2011.css" type="text/css" media="screen">
   <link rel="stylesheet" type="text/css" href="css/jquery.css" media="screen">
@@ -32,7 +32,7 @@
     <?php include 'admin_menu.php'?>
     <div id="AdminContent">
 <div class="MainForm">
-<form id="BlogForm" action="admin/insert_article" method="POST">
+<form id="BlogForm" action="admin/update_article/<?php echo $blog -> blog_id ?>" method="POST">
 <input id="hdn_blog_id" name="draft" value="0" type="hidden">
   <table>
   <tbody><tr><td class="t">标题（必填）</td></tr>
@@ -44,22 +44,19 @@
         <?php
             foreach($blog_types as $type){        
         ?>
-        <option value="<?php echo $type -> type_id?>"><?php echo $type -> type_name?></option>
+        <option value="<?php echo $type -> type_id?>" <?php echo $type->type_id == $blog->type_id?'selected':''?>><?php echo $type -> type_name?></option>
         <?php
             }
         ?>
 	</select>
-	<a href="blogCatalogs.htm" onclick="return confirm('是否放弃当前编辑进入分类管理？');">分类管理»</a>
+	<a href="admin/classification" onclick="return confirm('是否放弃当前编辑进入分类管理？');">分类管理»</a>
 	</td>
   </tr>
   <tr><td class='t'>内容（必填） 
 		<span id='save_draft_msg' style='display:none;color:#666;'></span>
-
   </td></tr>
-
   <tr>
-
-    <td><textarea name="content" id="ta_blog_content" style="width:750px;height:300px;" value="<?php echo $blog -> content?>"></textarea></td>
+    <td><textarea name="content" id="ta_blog_content" style="width:750px;height:300px;"><?php echo $blog -> content?></textarea></td>
   </tr>
 
   <tr class="option">
