@@ -32,7 +32,7 @@ class Admin extends CI_Controller {
         $this->pagination->initialize($config);
 
         $link = $this->pagination->create_links();
-
+        // $offset = $this -> uri -> segment(3);
         $blog_num = $this -> blog_model -> find_blog_limit_by_type_id($user_id, $this->uri->segment(3), $config['per_page']);
         // var_dump($blogs);
         // die();
@@ -107,6 +107,18 @@ class Admin extends CI_Controller {
 
         
     }
+    public function update_article($blog_id){
+        $blog_title = $this -> input -> post('title');
+		$blog_content = $this -> input -> post('content');
+        $blog_type_id = $this -> input -> post('type_id');
+        $row = $this -> blog_model -> update_blog($blog_title, $blog_content, $blog_type_id, $blog_id);
+        if($row){
+            // echo 'success';
+            redirect('admin/index');
+        }else{
+            echo "fail";
+        }
+    }
     public function blog_manage()
     {
         $user = $this -> session -> userdata('user');
@@ -129,12 +141,28 @@ class Admin extends CI_Controller {
             'blogs' => $arr
         ));
     }
-    public function delete_blog($blog_id){
+    // public function delete_blog($blog_id){
+    //     $row = $this -> blog_model -> delete_blog($blog_id);
+    //     if($row){
+    //         echo 'success';
+    //         // redirect('admin/index');
+    //     }else{
+    //         // echo "<script>alert('删除失败！')</script>";
+    //         echo 'fail';
+    //     }
+
+    // }
+
+
+    public function delete_blog(){
+        $blog_id = $this -> input -> post('blog_id');
         $row = $this -> blog_model -> delete_blog($blog_id);
         if($row){
-            redirect('admin/index');
+            echo 'success';
+            // redirect('admin/index');
         }else{
-            echo "<script>alert('删除失败！')</script>";
+            // echo "<script>alert('删除失败！')</script>";
+            echo 'fail';
         }
 
     }
@@ -166,7 +194,7 @@ class Admin extends CI_Controller {
         }
     }
 
-    public function classification(){
+    public function classification(){//分类管理
         $this -> load -> view('editCatalog');
     }
     public function blogcomments(){
@@ -179,22 +207,89 @@ class Admin extends CI_Controller {
         if(count($results)<=0){
             $results = [];
         }
+
+        //分页
+        $this->load->library('pagination');
+
+        $config['base_url'] = site_url().'admin/inbox';
+        $config['total_rows'] = count($results);
+        $config['per_page'] = 3;
+        $config['next_link'] = 'NEXT';
+        $config['prev_link'] = 'PREV';
+        $config['num_tag_open'] = "<span>&nbsp;";
+        $config['num_tag_close'] = '&nbsp;</span>';
+
+        $this->pagination->initialize($config);
+
+        $link = $this->pagination->create_links();
+        $message_num = $this -> message_model -> find_message_limit_by_receiver($user->user_id, $this->uri->segment(3), $config['per_page']);
+
+
+        
         $this -> load -> view('inbox',array(
-            'results' => $results
+            'results' => $message_num,
+            'link' => $link
         ));
 
         
     }
-    public function profile(){
-        $this -> load -> view('profile');
+    public function profile(){//编辑个人资料
+        $user = $this -> session -> userdata('user');
+        $this -> load -> model('user_model');
+        $row = $this -> user_model -> find_by_email($user->email);
+        if($row){
+            $this -> load -> view('profile', array(
+                'user' => $row
+            ));
+        }
+        
     }
     public function chpwd(){
-        $this -> load -> view('chpwd');
+        $user = $this -> session -> userdata('user');
+        $this -> load -> model('user_model');
+        $row = $this -> user_model -> find_by_email($user->email);
+        $this -> load -> view('chpwd',array(
+            'row'=>$row
+        ));
     }
     public function usersettings(){
         $this -> load -> view('usersettings');
     }
     public function outbox(){
         $this -> load -> view('outbox');
+    }
+    public function remove_one_msg(){
+        $message_id = $this -> input -> post('msg_id');
+        $this -> load -> model('message_model');
+        $row = $this -> message_model ->  del_one_msg($message_id);
+        if($row){
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+    public function edit_user(){
+        $email = $this -> input -> post('email');
+        $username = $this -> input -> post('username');
+        $gender = $this -> input -> post('gender');
+        $birthday = $this -> input -> post('birthday');
+        $city = $this -> input -> post('city');
+        $signature = $this -> input -> post('signature');
+        $this -> load -> model('user_model');
+        $row = $this -> user_model -> update_by_email($email,array(
+            'email'=>$email,
+            'username'=>$username,
+            'sex'=>$gender,
+            'birthday'=>$birthday,
+            'province'=>$city,
+            'signature'=>$signature
+        ));
+        if($row){
+            $user = $this -> user_model -> find_by_email($email);
+            $this -> session -> set_userdata('user', $user);
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
     }
 }
