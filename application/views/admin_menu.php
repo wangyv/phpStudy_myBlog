@@ -25,7 +25,7 @@
 <script>
     var str = location.href.split('/').pop();
 	var substr = str.split('?')[0];
-	console.log(substr);
+	// console.log(substr);
 	if(str == 'outbox'){
 		str = 'inbox';
 	}else if(substr == 'change_blog'){
