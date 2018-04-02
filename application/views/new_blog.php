@@ -49,7 +49,7 @@
             }
         ?>
 	</select>
-	<a href="blogCatalogs.htm" onclick="return confirm('是否放弃当前编辑进入分类管理？');">分类管理»</a>
+	<a href="admin/classification" onclick="return confirm('是否放弃当前编辑进入分类管理？');">分类管理»</a>
 	</td>
   </tr>
   <tr><td class='t'>内容（必填） 
@@ -61,6 +61,7 @@
 
     <td><textarea name="content" id="ta_blog_content" style="width:750px;height:300px;"></textarea></td>
   </tr>
+
   <tr class="option">
 	<td><strong>文章类型？</strong>
     <input id="blog_type_1" name="type" value="1" onclick="switch_src(this)" checked="checked" type="radio"> <label for="blog_type_1">原创&nbsp;</label>
@@ -86,7 +87,7 @@
   <tr><td>&nbsp;</td></tr>
   <tr class="submit">
 	<td>
-	<input value=" 发 表 " class="BUTTON SUBMIT" type="button" id="blog_btn">
+	<input value=" 发 表 " class="BUTTON SUBMIT" type="submit" id="blog_btn">
 	<input name="as_top" value="1" type="checkbox"> 
 	设置为置顶	
     <span id="ajax_processing" style="margin-left:10px;">正在提交，请稍候...</span>
@@ -97,8 +98,6 @@
 </form>
 </div>
 
-
-<a href="admin/select">查询</a>
 <style>
 
 .ke-icon-code {
@@ -133,19 +132,20 @@
             });
         });
 
-        $('#blog_btn').on('click', function(){
-            $.post('admin/insert_article',{
-                title: $('#f_title').val(),
-                content: $('#ta_blog_content').val(),
-                type_id: $('#type_id').val()
-            }, function(res){
-                if(res == 'success'){
-                    alert('博客发表成功！');
-                }else{
-                    alert('博客发表失败！');
-                }
-            },'text');
-        })
+        // $('#blog_btn').on('click', function(){
+        //     $.post('admin/insert_article',{
+        //         title: $('#f_title').val(),
+        //         content: $('#ta_blog_content').val(),
+        //         type_id: $('#type_id').val()
+        //     }, function(res){
+        //         if(res == 'success'){
+        //             alert('博客发表成功！');
+        //             window.location.href = 'admin/index';
+        //         }else{
+        //             alert('博客发表失败！');
+        //         }
+        //     },'text');
+        // })
     })
 </script>
 </body></html>
