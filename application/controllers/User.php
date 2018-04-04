@@ -66,4 +66,18 @@ class User extends CI_Controller {
             echo 'fail_oldpwd';
         }
     }
+    public function change_signature(){
+        $signature = $this -> input -> post('signature');
+        $user = $this -> session -> userdata('user');
+        $email = $user -> email;
+        $this -> load -> model('user_model');
+        $row = $this -> user_model -> update_signature_by_email($email, $signature);
+        if($row){
+            $new_user = $this -> user_model -> find_by_email($email);
+            $this -> session -> set_userdata('user', $new_user);
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
 }
