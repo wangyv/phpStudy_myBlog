@@ -36,53 +36,34 @@ include 'admin_check.php';
     <div id="AdminContent">
 <div class="MainForm BlogCommentManage">
   <h3>共有 3 篇博客评论，每页显示 20 个，共 1 页</h3>
-  <ul>
+  	<ul>
+	<?php
+		foreach($comments as $comment){
+
+	?>
 		<li id="cmt_24027_154693_261665734" class="row_1">
-		<span class="portrait"><a href="#" target="_blank"><img src="images/portrait.gif" alt="Johnny" title="Johnny" class="SmallPortrait" user="154693" align="absmiddle"></a></span>
-		<span class="comment">
-		<div class="user"><b>Johnny</b> 评论了 <a href="viewPost_comment.htm" target="_blank">测试文章3</a></div>
-		<div class="content"><p>hoho</p></div>
-		<div class="opts">
-			<span style="float:right;">
-			<a href="javascript:delete_c_by_id(24027,154693,261665734)">删除</a> |
-			<a href="javascript:delete_c_by_user(154693)">删除此人所有评论</a>
-			</span>			
-			2011-06-18 00:37
-		</div>
-		</span>
-		<div class="clear"></div>
-	</li>
-		<li id="cmt_24026_154693_261665461" class="row_0">
-		<span class="portrait"><a href="#" target="_blank"><img src="images/portrait.gif" alt="Johnny" title="Johnny" class="SmallPortrait" user="154693" align="absmiddle"></a></span>
-		<span class="comment">
-		<div class="user"><b>Johnny</b> 评论了 <a href="viewPost_logined.htm" target="_blank">测试文章2</a></div>
-		<div class="content"><p>测试评论111</p></div>
-		<div class="opts">
-			<span style="float:right;">
-			<a href="javascript:delete_c_by_id(24026,154693,261665461)">删除</a> |
-			<a href="javascript:delete_c_by_user(154693)">删除此人所有评论</a>
-			</span>			
-			2011-06-18 00:15
-		</div>
-		</span>
-		<div class="clear"></div>
-	</li>
-		<li id="cmt_24026_154693_261665458" class="row_1">
-		<span class="portrait"><a href="#" target="_blank"><img src="images/portrait.gif" alt="Johnny" title="Johnny" class="SmallPortrait" user="154693" align="absmiddle"></a></span>
-		<span class="comment">
-		<div class="user"><b>Johnny</b> 评论了 <a href="viewPost_logined.htm" target="_blank">测试文章2</a></div>
-		<div class="content"><p>测试评论</p></div>
-		<div class="opts">
-			<span style="float:right;">
-			<a href="javascript:delete_c_by_id(24026,154693,261665458)">删除</a> |
-			<a href="javascript:delete_c_by_user(154693)">删除此人所有评论</a>
-			</span>			
-			2011-06-18 00:14
-		</div>
-		</span>
-		<div class="clear"></div>
-	</li>
-	  </ul>
+			<span class="portrait"><a href="#" target="_blank"><img src="images/portrait.gif" alt="Johnny" title="Johnny" class="SmallPortrait" user="154693" align="absmiddle"></a></span>
+			<span class="comment">
+			<div class="user"><b><?php echo $comment -> username?></b> 评论了 <a href="admin/blog_detail/<?php echo $comment -> blog_id?>" target="_blank"><?php echo $comment -> blog_title?></a></div>
+			<div class="content"><p><?php echo $comment -> title?></p></div>
+			<div class="opts">
+				<span style="float:right;">
+				<a href="javascript:deleteComment(<?php echo $comment -> comment_id?>)">删除</a> |
+				<a href="javascript:deleteAllComment(<?php echo $comment -> send_user_id?>)">删除此人所有评论</a>
+				</span>			
+				<?php echo $comment -> post_time?>
+			</div>
+			</span>
+			<div class="clear"></div>
+		</li>
+
+	<?php
+	
+	}
+	?>
+	</ul>
+
+	<?php echo $link?>
 </div>
 </div>
 	<div class="clear"></div>
@@ -91,4 +72,37 @@ include 'admin_check.php';
 	<div class="clear"></div>
 	<div id="OSC_Footer">© 唯创网讯</div>
 </div>
+<script src="js/jquery.min.js"></script>
+<script>
+function deleteComment(id){
+	if(confirm("是否确认删除此条评论？")){
+		$.post('admin/delete_one_comment',{
+			'comment_id':id
+		},function(res){
+			if(res == 'success'){
+				alert('删除成功！');
+				location.href = 'admin/blogcomments';
+			}else{
+				alert('删除失败！');
+			}
+		},'text')
+	}
+}
+
+function deleteAllComment(user_id){
+	if(confirm("是否确认删除此人所有评论？")){
+		$.post('admin/delete_this_all_comment',{
+			'send_user_id':user_id
+		},function(res){
+			if(res == 'success'){
+				alert('删除成功！');
+				location.href = 'admin/blogcomments';
+			}else{
+				alert('删除失败！');
+			}
+		},'text')
+	}
+}
+
+</script>
 </body></html>
