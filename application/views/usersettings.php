@@ -38,13 +38,13 @@ include 'admin_check.php';
 	<tbody>
 		<tr>
 		<th>我的心情</th>		
-		<td><input name="space_name" size="40" maxlength="40" class="TEXT" value="今天心情很好！" type="text"></td>
+		<td><input name="space_name" size="40" maxlength="40" class="TEXT" value="<?php echo $user -> signature?>" type="text"></td>
 	</tr>
 	<tr><th></th><td></td></tr>
 	<tr class="submit">
 		<th></th>	
 		<td>
-		<input value="保存修改" class="BUTTON SUBMIT" type="submit">		
+		<input value="保存修改" class="BUTTON SUBMIT" type="button" id="sub-btn">		
 		<span id="error_msg" style="display:none"></span>
 		</td>
 	</tr>
@@ -59,4 +59,23 @@ include 'admin_check.php';
 	<div class="clear"></div>
 	<div id="OSC_Footer">© 唯创网讯</div>
 </div>
+<script src="js/jquery.min.js"></script>
+<script>
+	$('#sub-btn').on('click', function(){
+		if(confirm("是否确定修改心情？")){
+			$.post('user/change_signature',{
+				'signature':$('[name=space_name]').val()
+			},function(res){
+				if(res == 'success'){
+					alert('修改成功！');
+					location.href = 'admin/usersettings';
+				}else{
+					alert('修改失败！');
+				}
+			},'text');
+		}
+		
+	})
+
+</script>
 </body></html>
