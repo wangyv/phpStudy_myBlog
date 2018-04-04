@@ -66,7 +66,7 @@ class Blog_model extends CI_Model {
     public function find_comment_by_blog_id($blog_id){
         $this -> db -> select('c.*,u.username');
         $this -> db -> from('t_comment c');
-        $this -> db -> join('t_user u',"u.user_id=c.user_id");
+        $this -> db -> join('t_user u',"u.user_id=c.send_user_id");
         $this -> db -> where("c.blog_id", $blog_id);
         return $this -> db -> get() -> result();
         // return $this -> db -> get_where('t_comment', array(
@@ -77,7 +77,8 @@ class Blog_model extends CI_Model {
         $this -> db -> insert('t_comment', array(
             'title' => $title,
             'blog_id' => $blog_id,
-            'user_id' => $user_id
+            'send_user_id' => $user_id,
+            'receiver_user_id' => $user_id
         ));
         return $this -> db -> affected_rows();
 
@@ -90,6 +91,38 @@ class Blog_model extends CI_Model {
             'type_id' => $type_id
         ));
         
+        return $this -> db -> affected_rows();
+    }
+    public function find_comment_by_user_id($user_id){
+        $this -> db -> select('c.*,u.username,b.title blog_title');
+        $this -> db -> from('t_comment c');
+        $this -> db -> join('t_user u',"u.user_id=c.send_user_id");
+        $this -> db -> join('t_blog b',"c.blog_id=b.blog_id");
+        $this -> db -> where('c.receiver_user_id',$user_id);       
+        return $this -> db -> get() -> result();
+    }
+
+    public function find_comment_limit_by_user_id($user_id, $offset, $page_num){
+        $this -> db -> select('c.*,u.username,b.title blog_title,');
+        $this -> db -> from('t_comment c');
+        $this -> db -> join('t_user u',"u.user_id=c.send_user_id");
+        $this -> db -> join('t_blog b',"c.blog_id=b.blog_id");
+        $this -> db -> where('c.receiver_user_id',$user_id);
+        $this -> db -> order_by('c.post_time', 'DESC');
+        $this -> db -> limit($page_num, $offset);       
+        return $this -> db -> get() -> result();
+    }
+
+    public function delete_one_comment_by_id($comment_id){
+        $this -> db -> delete('t_comment', array(
+            'comment_id' => $comment_id
+        ));
+        return $this -> db -> affected_rows();
+    }
+    public function delete_this_all_comment_by_id($send_user_id){
+        $this -> db -> delete('t_comment', array(
+            'send_user_id' => $send_user_id
+        ));
         return $this -> db -> affected_rows();
     }
 }
