@@ -34,4 +34,11 @@ class User_model extends CI_Model {
         ));
         return $this -> db -> affected_rows();
     }
+    public function update_signature_by_email($email, $signature){
+        $this -> db -> where('email',$email);
+        $this -> db -> update('t_user', array(
+            'signature' => $signature
+        ));
+        return $this -> db -> affected_rows();
+    }
 }
