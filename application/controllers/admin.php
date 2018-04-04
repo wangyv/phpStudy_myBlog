@@ -197,8 +197,39 @@ class Admin extends CI_Controller {
     public function classification(){//分类管理
         $this -> load -> view('editCatalog');
     }
-    public function blogcomments(){
-        $this -> load -> view('blogcomments');
+    public function blogcomments(){//评论管理
+        $user = $this -> session -> userdata('user');
+        $this -> load -> model('blog_model');
+        $results = $this -> blog_model ->find_comment_by_user_id($user->user_id);
+        
+        //分页
+        $this->load->library('pagination');
+
+        $config['base_url'] = site_url().'admin/blogcomments';
+        $config['total_rows'] = count($results);
+        $config['per_page'] = 3;
+        $config['next_link'] = 'NEXT';
+        $config['prev_link'] = 'PREV';
+        $config['num_tag_open'] = "<span>&nbsp;";
+        $config['num_tag_close'] = '&nbsp;</span>';
+
+        $this->pagination->initialize($config);
+
+        $link = $this->pagination->create_links();
+        $comment_num = $this -> blog_model -> find_comment_limit_by_user_id($user->user_id, $this->uri->segment(3), $config['per_page']);
+        
+        
+        
+        
+        if($comment_num){
+            $this -> load -> view('blogcomments',array(
+                'comments' => $comment_num,
+                'link' => $link
+            ));
+        }
+
+
+
     }
     public function inbox(){//站内留言
         $user = $this -> session -> userdata('user');
@@ -233,7 +264,7 @@ class Admin extends CI_Controller {
 
         
     }
-    public function profile(){//编辑个人资料
+    public function profile(){//修改个人资料
         $user = $this -> session -> userdata('user');
         $this -> load -> model('user_model');
         $row = $this -> user_model -> find_by_email($user->email);
@@ -253,7 +284,18 @@ class Admin extends CI_Controller {
         ));
     }
     public function usersettings(){
-        $this -> load -> view('usersettings');
+        $user = $this -> session -> userdata('user');
+        $email = $user -> email;
+        $this -> load -> model('user_model');
+        $row = $this -> user_model -> find_by_email($email);
+        if($row){
+            $this -> load -> view('usersettings',array(
+                'user' => $row
+            ));
+        }else{
+            echo 'fail';
+        }
+        
     }
     public function outbox(){
         $this -> load -> view('outbox');
@@ -287,6 +329,26 @@ class Admin extends CI_Controller {
         if($row){
             $user = $this -> user_model -> find_by_email($email);
             $this -> session -> set_userdata('user', $user);
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+    public function delete_one_comment(){
+        $comment_id = $this -> input -> post('comment_id');
+        $this -> load -> model('blog_model');
+        $row = $this -> blog_model -> delete_one_comment_by_id($comment_id);
+        if($row){
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+    public function delete_this_all_comment(){
+        $send_user_id = $this -> input -> post('send_user_id');
+        $this -> load -> model('blog_model');
+        $row = $this -> blog_model -> delete_this_all_comment_by_id($send_user_id);
+        if($row){
             echo 'success';
         }else{
             echo 'fail';
