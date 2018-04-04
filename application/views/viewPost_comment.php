@@ -42,7 +42,7 @@ include 'admin_check.php';
     <h1><?php echo $blog -> title?></h1>
     <div class="BlogStat">
 						<span class="admin">
-			<a href="newBlog.htm">编辑</a>&nbsp;|&nbsp;<a href="javascript:delete_blog(24026)">删除</a>
+			<a href="admin/change_blog/?blog_id=<?php echo $blog -> blog_id?>">编辑</a>&nbsp;|&nbsp;<a href="javascript:delete_blog(24026)">删除</a>
 		</span>
 				发表于1小时前 , 
 		已有<strong>4</strong>次阅读  
