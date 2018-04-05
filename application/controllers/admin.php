@@ -141,6 +141,25 @@ class Admin extends CI_Controller {
             'blogs' => $arr
         ));
     }
+
+    public function delete_blogs(){
+        $blog_ids = $this -> input -> post('blog_ids');
+        $flag = false;
+        foreach($blog_ids as $blog_id){
+            $row = $this -> blog_model -> delete_blog($blog_id);
+            if($row){
+                $flag = true;
+            }else{
+                $flag = false;
+            }
+        }
+        if($flag){
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+
     // public function delete_blog($blog_id){
     //     $row = $this -> blog_model -> delete_blog($blog_id);
     //     if($row){
