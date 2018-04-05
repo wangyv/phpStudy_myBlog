@@ -33,10 +33,10 @@ include 'admin_check.php';
 <div class="MainForm BlogArticleManage">
   <h3 class="title">共有 <?php echo count($blogs)?> 篇博客，每页显示 40 个，共 1 页</h3>
     <div id="BlogOpts">
-	<a href="javascript:;" onclick="select_all();">全选</a>&nbsp;|
-	<a href="javascript:;" onclick="unselect_all();">取消</a>&nbsp;|
-	<a href="javascript:;" onclick="select_other();">反向选择</a>&nbsp;|
-	<a href="javascript:;" onclick="delete_sel()">删除选中</a>
+	<a href="javascript:checkAll();">全选</a>&nbsp;|
+	<a href="javascript:removeCheckAll();">取消</a>&nbsp;|
+	<a href="javascript:inverseElection();">反向选择</a>&nbsp;|
+	<a href="javascript:deleteBlog();">删除选中</a>
   </div>
   <ul>
 		<?php
@@ -44,8 +44,8 @@ include 'admin_check.php';
 
 		?>
 			<li class="row_1">
-			<input name="blog" value="24027" type="checkbox">
-			<a href="viewPost_comment.htm" target="_blank"><?php echo $blog -> title?></a>
+			<input name="blog" value="<?php echo $blog->blog_id?>" type="checkbox">
+			<a href="admin/blog_detail/<?php echo $blog->blog_id?>" target="_blank"><?php echo $blog -> title?></a>
 			<small><?php echo $blog -> post_time?></small>
 			</li>
 		<?php
@@ -57,4 +57,43 @@ include 'admin_check.php';
 </div>
 	<div class="clear"></div>
 </div>
+<script src="js/jquery.min.js"></script>
+<script>
+	function checkAll(){
+		$('[name=blog]').prop('checked','checked');
+	}
+	function removeCheckAll(){
+		$('[name=blog]').prop('checked',null);
+	}
+	function inverseElection(){
+		$('[name=blog]').each(function(index,elem){
+			// console.log($(elem).prop('checked'));
+			if($(elem).prop('checked')){
+				$(elem).prop('checked',null);
+			}else{
+				$(elem).prop('checked','checked');
+			}
+		});
+	}
+	function deleteBlog() {
+		var arr = [];
+		$('[name=blog]').each(function(index,elem){
+			if($(elem).prop('checked')){
+				arr.push($(elem).val());
+			}
+		});
+		if(confirm("是否确认删除这些博客，一旦删除，将无法恢复")){
+			$.post('admin/delete_blogs',{
+				'blog_ids':arr
+			},function(res){
+				if(res == 'success'){
+					alert('删除成功！');
+					location.href = 'admin/blog_manage';
+				}else{
+					alert('删除失败！');
+				}
+			},'text')
+		}
+	}
+</script>
 </body></html>
