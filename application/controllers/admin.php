@@ -214,7 +214,22 @@ class Admin extends CI_Controller {
     }
 
     public function classification(){//分类管理
-        $this -> load -> view('editCatalog');
+        $user = $this -> session -> userdata('user');
+        $user_id = $user -> user_id;
+        $this -> load -> model('blog_model');
+        $results = $this -> blog_model -> find_blog_type_by_user($user_id);
+        if($results){
+            foreach($results as $result){
+                $type_id = $result -> type_id;
+                //获取博客类型及数量
+                $arrs = $this -> blog_model -> find_blog_count_by_type_id($type_id);
+                $result -> num = count($arrs);
+            }
+            $this -> load -> view('editCatalog',array(
+                'results' => $results
+            ));
+        }
+        
     }
     public function blogcomments(){//评论管理
         $user = $this -> session -> userdata('user');
@@ -373,4 +388,38 @@ class Admin extends CI_Controller {
             echo 'fail';
         }
     }
+
+    public function update_blog_type(){
+        $type_id = $this -> input -> post('type_id');
+        $type_name = $this -> input -> post('type_name');
+        $row = $this -> blog_model -> update_blog_type_by_id($type_id,$type_name);
+        if($row){
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+    public function save_blog_type(){
+        $type_name = $this -> input -> post('type_name');
+        $user = $this -> session -> userdata('user');
+        $user_id = $user -> user_id;
+        $row = $this -> blog_model -> save_blog_type($type_name,$user_id);
+        if($row){
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+
+    public function delete_blog_type(){
+        $type_id = $this -> input -> post('type_id');
+        $row = $this -> blog_model -> delete_blog_type($type_id);
+        if($row){
+            echo 'success';
+        }else{
+            echo 'fail';
+        }
+    }
+
+    
 }
