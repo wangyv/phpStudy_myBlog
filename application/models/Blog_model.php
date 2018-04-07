@@ -125,4 +125,28 @@ class Blog_model extends CI_Model {
         ));
         return $this -> db -> affected_rows();
     }
+
+    public function update_blog_type_by_id($type_id,$type_name){
+        $this -> db -> where('bt.type_id', $type_id);
+        $this -> db -> update('t_blog_type bt', array(
+            'type_name' => $type_name
+        ));
+        return $this -> db -> affected_rows();
+    }
+
+    public function save_blog_type($type_name,$user_id){
+        $this -> db -> insert('t_blog_type', array(
+            'type_name' => $type_name,
+            'user_id' => $user_id
+        ));
+        return $this -> db -> affected_rows();
+
+    }
+    public function delete_blog_type($type_id){
+        $this -> db -> delete('t_blog_type', array(
+            'type_id' => $type_id
+        ));
+        return $this -> db -> affected_rows();
+
+    }
 }
